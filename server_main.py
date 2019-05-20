@@ -12,4 +12,8 @@ if __name__ == "__main__":
 
     client = s.wait_for_client()
 
+    print(client.recv_bytes_msg())
     print(client.recv_int())
+    print(client.recv_float())
+    print(client.recv_string())
+    print(client.recv_string())

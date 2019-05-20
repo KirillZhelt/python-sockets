@@ -12,4 +12,8 @@ from socket_helper.server_socket import *
 if __name__ == "__main__":
     s = ClientSocket.connect_to_server("127.0.0.1", 65000)
 
-    s.send_int(-3)
+    s.send_bytes_msg(b"Hello world")
+    s.send_int(-5)
+    s.send_float(3.67)
+    s.send_string("Hello world")
+    s.send_string("Привет мир")
