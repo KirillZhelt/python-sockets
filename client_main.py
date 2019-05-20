@@ -6,6 +6,10 @@ from socket_helper.server_socket import *
 # https://docs.python.org/3/library/socket.html
 # https://docs.python.org/3/howto/sockets.html#socket-howto
 
+# TODO: handle errors??
+# https://www.binarytides.com/receive-full-data-with-the-recv-socket-function-in-python/
 
 if __name__ == "__main__":
     s = ClientSocket.connect_to_server("127.0.0.1", 65000)
+
+    s.send_int(-3)

@@ -1,4 +1,5 @@
 import socket
+import struct
 
 
 class ClientSocket:
@@ -16,17 +17,37 @@ class ClientSocket:
 
         return cls(s)
 
+    def recvall(self, n):
+        data = b""
+        while len(data) < n:
+            packet = self.s.recv(n - len(data))
+            if not packet:
+                return None
+
+            data += packet
+
+        return data
+
+    def send_bytes_msg(self, bytes_msg):
+        bytes_msg = struct.pack(">I", len(bytes_msg)) + bytes_msg # > stands for BigEndian, I - for unsigned int
+        self.s.sendall(bytes_msg)
+
+    def recv_bytes_msg(self):
+        raw_msglen = self.recvall(4)
+
+        if not raw_msglen:
+            return None
+
+        msglen = struct.unpack(">I", raw_msglen)[0]
+
+        return self.recvall(msglen)
+
+    def send_int(self, i):
+        self.send_bytes_msg(struct.pack(">i", i))
+
+    def recv_int(self):
+        return struct.unpack(">i", self.recv_bytes_msg())[0]
+
     def close(self):
         self.s.close()
 
-    
-
-    # with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    #     s.connect((HOST, PORT))
-
-    #     while True:
-    #         s.sendall(input().encode())
-
-    #         data = s.recv(1024)
-
-    #         print("Received", data) 

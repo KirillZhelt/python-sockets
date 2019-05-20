@@ -12,4 +12,4 @@ if __name__ == "__main__":
 
     client = s.wait_for_client()
 
-    print(client.s)
+    print(client.recv_int())
