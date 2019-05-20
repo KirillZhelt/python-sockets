@@ -1,5 +1,6 @@
 import socket
-from socket_helper import client_socket, server_socket
+from socket_helper.client_socket import *
+from socket_helper.server_socket import *
 
 # https://realpython.com/python-sockets/
 # https://docs.python.org/3/library/socket.html
@@ -7,4 +8,4 @@ from socket_helper import client_socket, server_socket
 
 
 if __name__ == "__main__":
-    pass
+    s = ClientSocket.connect_to_server("127.0.0.1", 65000)

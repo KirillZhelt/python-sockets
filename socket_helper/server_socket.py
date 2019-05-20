@@ -1,5 +1,6 @@
 import socket
 
+from socket_helper.client_socket import *
 
 class ServerSocket:
 
@@ -7,15 +8,14 @@ class ServerSocket:
         self.port = port
 
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
+        self.s.bind(("", self.port))
         self.s.listen(1)
 
     def wait_for_client(self):
-        return self.s.accept()
+        return ClientSocket(self.s.accept()[0])
 
 
 
-if __name__ == "__main__":
     # with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     #     s.bind((HOST, PORT))
     #     s.listen()
@@ -28,4 +28,4 @@ if __name__ == "__main__":
     #             if not data:
     #                 break
     #             conn.sendall(data)
-    pass
+    
