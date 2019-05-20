@@ -11,10 +11,14 @@ class ServerSocket:
         self.s.bind(("", self.port))
         self.s.listen(1)
 
+    def __del__(self):
+        self.close()
+
     def wait_for_client(self):
         return ClientSocket(self.s.accept()[0])
 
-
+    def close(self):
+        self.s.close()
 
     # with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     #     s.bind((HOST, PORT))
