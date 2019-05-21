@@ -58,7 +58,9 @@ class ClientSocket:
         self.send_bytes_msg(s.encode("UTF-8"))
 
     def recv_string(self):
-        return self.recv_bytes_msg().decode("UTF-8")
+        s = self.recv_bytes_msg()
+
+        return None if s == None else s.decode("UTF-8")
 
     def close(self):
         self.s.close()
