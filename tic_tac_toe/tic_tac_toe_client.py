@@ -40,11 +40,29 @@ class TicTacToeClient:
         print()
 
     def enter(self):
+        # TODO: make code cleaner, check clever after each move
 
         while True:
             server_cell = self.client_socket.recv_int()
-            self.table[server_cell - 1] = "x"
-            self.show_table()         
+
+            if server_cell <= 9:
+                self.table[server_cell - 1] = "x"
+
+                self.show_table()         
+
+            if server_cell > 9:
+                if server_cell == 10:
+                    last_server_cell = self.client_socket.recv_int()
+                    self.table[last_server_cell - 1] = "x"
+
+                self.show_table()         
+
+                if server_cell == 10:
+                    print("You lose")
+                elif server_cell == 11:
+                    print("You win")
+
+                break
 
             print("Choose a cell (from 1 to 9): ", end=" ")
             cell = int(input())

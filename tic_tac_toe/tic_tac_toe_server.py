@@ -51,26 +51,31 @@ class TicTacToeServer:
 
     def is_finished(self):
         # 0 - not finished, 1 - server(x) win, 2 - client(o) win 
-        if self.data[0] != "" and self.data[0] == self.data[1] == self.data[2]:
-            return TicTacToeServer.who_win(self.data[0])
-        elif self.data[3] != "" and self.data[3] == self.data[4] == self.data[5]:
-            return TicTacToeServer.who_win(self.data[3])
-        elif self.data[6] != "" and self.data[6] == self.data[7] == self.data[8]:
-            return TicTacToeServer.who_win(self.data[6])
-        elif self.data[0] != "" and self.data[0] == self.data[3] == self.data[6]:
-            return TicTacToeServer.who_win(self.data[0])
-        elif self.data[1] != "" and self.data[1] == self.data[4] == self.data[7]:
-            return TicTacToeServer.who_win(self.data[1])
-        elif self.data[2] != "" and self.data[2] == self.data[6] == self.data[8]:
-            return TicTacToeServer.who_win(self.data[2])
-        elif self.data[0] != "" and self.data[0] == self.data[4] == self.data[8]:
-            return TicTacToeServer.who_win(self.data[0])
-        elif self.data[2] != "" and self.data[2] == self.data[4] == self.data[6]:
-            return TicTacToeServer.who_win(self.data[2])
+
+        # TODO: think about better check
+
+        if self.table[0] != "" and self.table[0] == self.table[1] == self.table[2]:
+            return TicTacToeServer.who_win(self.table[0])
+        elif self.table[3] != "" and self.table[3] == self.table[4] == self.table[5]:
+            return TicTacToeServer.who_win(self.table[3])
+        elif self.table[6] != "" and self.table[6] == self.table[7] == self.table[8]:
+            return TicTacToeServer.who_win(self.table[6])
+        elif self.table[0] != "" and self.table[0] == self.table[3] == self.table[6]:
+            return TicTacToeServer.who_win(self.table[0])
+        elif self.table[1] != "" and self.table[1] == self.table[4] == self.table[7]:
+            return TicTacToeServer.who_win(self.table[1])
+        elif self.table[2] != "" and self.table[2] == self.table[6] == self.table[8]:
+            return TicTacToeServer.who_win(self.table[2])
+        elif self.table[0] != "" and self.table[0] == self.table[4] == self.table[8]:
+            return TicTacToeServer.who_win(self.table[0])
+        elif self.table[2] != "" and self.table[2] == self.table[4] == self.table[6]:
+            return TicTacToeServer.who_win(self.table[2])
 
         return 0
 
     def start(self):
+        # TODO: make code cleaner, check clever after each move
+
         while True:
             print("Choose a cell (from 1 to 9): ", end=" ")
             cell = int(input())
@@ -90,15 +95,25 @@ class TicTacToeServer:
                 self.table[client_cell - 1] = "o"
 
                 self.show_table()
+
+                round_result = self.is_finished()
+
+                if round_result == 2:
+                    print("You lose")
+
+                    self.client_socket.send_int(round_result + 9)
+                    
+                    break
             else:
                 if round_result == 1:
                     print("You win")
-                else:
+                elif round_result == 2:
                     print("You lose")
 
-                
+                self.client_socket.send_int(round_result + 9)
+                self.client_socket.send_int(cell)
 
-
+                break
 
 
 if __name__ == "__main__":
