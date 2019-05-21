@@ -45,15 +45,33 @@ class TicTacToeServer:
 
         print()
 
-    def is_finished(self):
-        # 0 - not finished, 1 - server (x) win, 2 - client(o) win 
-        
+    @staticmethod
+    def who_win(s):
+        return 1 if s == "x" else 2
 
+    def is_finished(self):
+        # 0 - not finished, 1 - server(x) win, 2 - client(o) win 
+        if self.data[0] != "" and self.data[0] == self.data[1] == self.data[2]:
+            return TicTacToeServer.who_win(self.data[0])
+        elif self.data[3] != "" and self.data[3] == self.data[4] == self.data[5]:
+            return TicTacToeServer.who_win(self.data[3])
+        elif self.data[6] != "" and self.data[6] == self.data[7] == self.data[8]:
+            return TicTacToeServer.who_win(self.data[6])
+        elif self.data[0] != "" and self.data[0] == self.data[3] == self.data[6]:
+            return TicTacToeServer.who_win(self.data[0])
+        elif self.data[1] != "" and self.data[1] == self.data[4] == self.data[7]:
+            return TicTacToeServer.who_win(self.data[1])
+        elif self.data[2] != "" and self.data[2] == self.data[6] == self.data[8]:
+            return TicTacToeServer.who_win(self.data[2])
+        elif self.data[0] != "" and self.data[0] == self.data[4] == self.data[8]:
+            return TicTacToeServer.who_win(self.data[0])
+        elif self.data[2] != "" and self.data[2] == self.data[4] == self.data[6]:
+            return TicTacToeServer.who_win(self.data[2])
 
         return 0
 
     def start(self):
-        while self.is_finished() == 0:
+        while True:
             print("Choose a cell (from 1 to 9): ", end=" ")
             cell = int(input())
 
@@ -64,12 +82,22 @@ class TicTacToeServer:
 
             self.show_table()
 
-            self.client_socket.send_int(cell)
-            client_cell = self.client_socket.recv_int()
+            round_result = self.is_finished()
+            if round_result == 0:
+                self.client_socket.send_int(cell)
+                client_cell = self.client_socket.recv_int()
 
-            self.table[client_cell - 1] = "o"
+                self.table[client_cell - 1] = "o"
 
-            self.show_table()
+                self.show_table()
+            else:
+                if round_result == 1:
+                    print("You win")
+                else:
+                    print("You lose")
+
+                
+
 
 
 
