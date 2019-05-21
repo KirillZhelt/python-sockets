@@ -21,6 +21,15 @@ class TicTacToeClient:
     def __del__(self):
         self.close()
 
+    def show_table(self):
+        print()
+        print("Current table:")
+
+        for i in range(3):
+            print(self.table[3 * i], self.table[3 * i + 1], self.table[3 * i + 2])
+
+        print()
+
 if __name__ == "__main__":
     client = TicTacToeClient("127.0.0.1")
 

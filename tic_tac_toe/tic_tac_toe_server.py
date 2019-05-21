@@ -14,9 +14,6 @@ class TicTacToeServer:
     def __init__(self):
         self.server_socket = ServerSocket(65001)
 
-    def wait_for_tic_tac_toe_client(self):
-        self.client_socket = self.server_socket.wait_for_client()
-
     def close(self):
         if self.server_socket != None:
             self.server_socket.close()
@@ -27,11 +24,24 @@ class TicTacToeServer:
     def __del__(self):
         self.close()
 
+    def wait_for_tic_tac_toe_client(self):
+        self.client_socket = self.server_socket.wait_for_client()
+
+    def show_table(self):
+        print()
+        print("Current table:")
+
+        for i in range(3):
+            print(self.table[3 * i], self.table[3 * i + 1], self.table[3 * i + 2])
+
+        print()
     
 
 if __name__ == "__main__":
     server = TicTacToeServer()
     server.wait_for_tic_tac_toe_client()
+
+    server.show_table()
 
     server.close()
 
