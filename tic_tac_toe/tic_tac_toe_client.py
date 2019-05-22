@@ -3,15 +3,19 @@
 import sys
 sys.path.append("..")
 
-import socket
+from tic_tac_toe import TicTacToe
 
 from socket_helper.client_socket import *
 from socket_helper.server_socket import *
 
-class TicTacToeClient:
-    table = ["" for i in range(9)]
+
+class TicTacToeClient(TicTacToe):
+
+    mark = "o"
 
     def __init__(self, server_host):
+        TicTacToe.__init__(self)
+
         self.client_socket = ClientSocket.connect_to_server(server_host, 65001)
 
     def close(self):
@@ -21,39 +25,21 @@ class TicTacToeClient:
     def __del__(self):
         self.close()
 
-    @staticmethod
-    def cell_content(s, i):
-        if s == "":
-            return str(i + 1)
-
-        return s
-
-    def show_table(self):
-        print()
-        print("Current table:")
-
-        for i in range(3):
-            print(TicTacToeClient.cell_content(self.table[3 * i], 3 * i), \
-                TicTacToeClient.cell_content(self.table[3 * i + 1], 3 * i + 1),\
-                TicTacToeClient.cell_content(self.table[3 * i + 2], 3 * i + 2))
-
-        print()
-
     def enter(self):
-        # TODO: make code cleaner, check clever after each move
 
         while True:
             server_cell = self.client_socket.recv_int()
 
             if server_cell <= 9:
-                self.table[server_cell - 1] = "x"
-
+                self.move(server_cell, "x")
                 self.show_table()         
 
             if server_cell > 9:
-                if server_cell == 10:
+                if server_cell == 10 or server_cell == 12:
                     last_server_cell = self.client_socket.recv_int()
-                    self.table[last_server_cell - 1] = "x"
+
+                    if last_server_cell != None:
+                        self.move(last_server_cell, "x")
 
                 self.show_table()         
 
@@ -61,23 +47,25 @@ class TicTacToeClient:
                     print("You lose")
                 elif server_cell == 11:
                     print("You win")
+                elif server_cell == 12:
+                    print("Draw")
 
                 break
 
-            print("Choose a cell (from 1 to 9): ", end=" ")
-            cell = int(input())
+            cell = int(input("Choose a cell (from 1 to 9): "))
 
             assert 1 <= cell <= 9
 
-            if self.table[cell - 1] != "x":
-                self.table[cell - 1] = "o"
+            self.move(cell, self.mark)
 
             self.show_table()
             self.client_socket.send_int(cell)
 
 
 if __name__ == "__main__":
-    client = TicTacToeClient("127.0.0.1")
+    server_host = input("Enter server host: ")
+
+    client = TicTacToeClient(server_host)
 
     client.enter()
 
