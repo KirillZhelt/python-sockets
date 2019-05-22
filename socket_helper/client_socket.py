@@ -46,13 +46,17 @@ class ClientSocket:
         self.send_bytes_msg(struct.pack(">i", i))
 
     def recv_int(self):
-        return struct.unpack(">i", self.recv_bytes_msg())[0]
+        i = self.recv_bytes_msg()
 
-    def send_float(self, i):
-        self.send_bytes_msg(struct.pack(">f", i))
+        return None if i == None else struct.unpack(">i", i)[0]
+
+    def send_float(self, f):
+        self.send_bytes_msg(struct.pack(">f", f))
 
     def recv_float(self):
-        return struct.unpack(">f", self.recv_bytes_msg())[0]
+        f = self.recv_bytes_msg()
+
+        return None if f == None else struct.unpack(">f", f)[0]
 
     def send_string(self, s):
         self.send_bytes_msg(s.encode("UTF-8"))
